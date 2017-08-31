@@ -22,7 +22,7 @@ session = requests.session()
 	## verify privileges are valid
 	## remove duplicate privilege inputs
 	## validate groups
-	## prevent update of system group (this returns 403 anyways)
+	## prevent update of any system groups (this returns 403 anyways)
 	## don't update timestamp if no privileges change
 	## adding a privilege trumps deleting a privilege
 
