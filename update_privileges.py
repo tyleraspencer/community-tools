@@ -25,18 +25,19 @@ session = requests.session()
 	## prevent update of any system groups (this returns 403 anyways)
 	## don't update timestamp if no privileges change
 	## adding a privilege trumps deleting a privilege
+	## deleting a privilege that a user does not have will be ignored
 
 ################################################################
 ## GLOBAL VARIABLES TO MODIFY
 thoughtspot_host = "http://"
 username = ""
 password = ""
-groups_to_modify = ["1","2","3","4","5","6","7"]
+groups_to_modify = ["example@example.com","example2@example.com"]
 privileges_to_remove = ["USERDATAUPLOADING","DATADOWNLOADING","DATAMANAGEMENT"]
 privileges_to_add = ["ADMINISTRATION"]
 ################################################################
 
-## PRIVILEGE OPTION:
+## PRIVILEGE OPTIONS:
 	## "DATAMANAGEMENT"
 	## "DATADOWNLOADING"
 	## "USERDATAUPLOADING"
