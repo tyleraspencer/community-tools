@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ## Purpose: 
-##  	remove specified privilage from list of groups
+##  	add/remove specified privileges from list of groups
 ## Authors:
 ##  	tyler.spencer@thoughtspot.com
 ## Created:
