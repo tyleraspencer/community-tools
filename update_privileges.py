@@ -28,9 +28,9 @@ session = requests.session()
 
 ################################################################
 ## GLOBAL VARIABLES TO MODIFY
-thoughtspot_host = "http://10.85.76.56"
-username = "tsadmin"
-password = "admin"
+thoughtspot_host = "http://"
+username = ""
+password = ""
 groups_to_modify = ["1","2","3","4","5","6","7"]
 privileges_to_remove = ["USERDATAUPLOADING","DATADOWNLOADING","DATAMANAGEMENT"]
 privileges_to_add = ["ADMINISTRATION"]
