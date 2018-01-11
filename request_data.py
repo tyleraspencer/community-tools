@@ -32,7 +32,7 @@ thoughtspot_host = ''
 username = ''
 password = ''
 pinboardId = ''
-
+vizId = '' #leave blank to get all data in pinboard
 
 #session cookies
 session = requests.session()
@@ -68,6 +68,9 @@ def login():
 
 def getData(args):
 	myURL = thoughtspot_host + "/callosum/v1/tspublic/v1/pinboarddata?id=" + pinboardId
+	
+	if vizId:
+		myURL = myURL + '/' + vizId
 	
 	#output in json
 	response = session.post(myURL)
