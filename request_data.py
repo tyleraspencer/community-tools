@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 ## Purpose: 
 ##  	request data from pinboard in ThoughtSpot
 ## Authors:
-##  	tyler.spencer@thoughtspot.com
+##  	tyler.spencer
 ## Created:
 ##  	29-June-2016
 
