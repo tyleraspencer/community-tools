@@ -52,19 +52,12 @@ def parse_args():
 def login():
 	#send connection credentials
 	credentials = {"username": username, "password": password, "rememberme": True}
-	login = session.post(thoughtspot_host + '/callosum/v1/session/login', data=credentials)
+	login = session.post(thoughtspot_host + '/callosum/v1/tspublic/v1/session/login', data=credentials)
 	if login.status_code != 200:
 		print "Server connection failed. Status code: " + str(login.status_code)
 		return False
-
-	#check for successful connection
-	checklogin = session.get(thoughtspot_host + '/callosum/v1/session/info')
-	response = json.loads(checklogin.text)
-	if username == response['userName']:
-		return True
 	else:
-		print "Server connection failed. Status code: " + str(checklogin.status_code)
-		return False
+		return True
 
 def getData(args):
 	myURL = thoughtspot_host + "/callosum/v1/tspublic/v1/pinboarddata?id=" + pinboardId
