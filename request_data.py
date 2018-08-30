@@ -63,7 +63,7 @@ def getData(args):
 	myURL = thoughtspot_host + "/callosum/v1/tspublic/v1/pinboarddata?id=" + pinboardId
 	
 	if vizId:
-		myURL = myURL + '/' + vizId
+		myURL = myURL + '&vizid=%5B' + vizId + '%5D'
 	
 	#output in json
 	response = session.post(myURL)
