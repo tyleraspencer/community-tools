@@ -53,7 +53,7 @@ def login():
 	#send connection credentials
 	credentials = {"username": username, "password": password, "rememberme": True}
 	login = session.post(thoughtspot_host + '/callosum/v1/tspublic/v1/session/login', data=credentials)
-	if login.status_code != 200:
+	if login.status_code != 204:
 		print "Server connection failed. Status code: " + str(login.status_code)
 		return False
 	else:
