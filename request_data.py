@@ -27,16 +27,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 import sys, requests, json, socket, csv, argparse
 from collections import defaultdict
 
-#thoughtspot_host = 'http://' + socket.gethostname()
+#thoughtspot_host = 'https://' + socket.gethostname()
 thoughtspot_host = ''
 username = ''
 password = ''
 pinboardId = ''
-vizId = '' #leave blank to get all data in pinboard
+vizId = '' ## leave blank to get all data in pinboard
 
 #session cookies
 session = requests.session()
-session.get(thoughtspot_host)
+#session.headers = {"X-Requested-By": "ThoughtSpot"}  ## needed for 4.5 and above
 
 def main():
 	if login() == True:
