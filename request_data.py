@@ -23,18 +23,21 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 ## Created:
 ##  	29-June-2016
 ## Usage:
+
 ##	python request_data.py
+##	
 
 
 import sys, requests, json, socket, csv, argparse
 from collections import defaultdict
 
-#thoughtspot_host = 'https://' + socket.gethostname()
+##################VARIABLES TO MODIFY##################
 thoughtspot_host = 'https://' + ''
 username = ''
 password = ''
 pinboardId = ''
 vizId = '' ## leave blank to get all data in pinboard
+#######################################################
 
 #session cookies
 session = requests.session()
