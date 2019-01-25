@@ -23,9 +23,10 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 ## Created:
 ##  	29-June-2016
 ## Usage:
-
+##	modify variables on lines 34-40
 ##	python request_data.py
-##	
+##	default output is JSON
+##	optionally add "--csv" flag for CSV output
 
 
 import sys, requests, json, socket, csv, argparse
