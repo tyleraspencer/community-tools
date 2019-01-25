@@ -36,7 +36,7 @@ vizId = '' ## leave blank to get all data in pinboard
 
 #session cookies
 session = requests.session()
-#session.headers = {"X-Requested-By": "ThoughtSpot"}  ## needed for 4.5 and above
+session.headers = {"X-Requested-By": "ThoughtSpot"}  ## needed for 4.5 and above
 
 def main():
 	if login() == True:
