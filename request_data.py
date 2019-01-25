@@ -22,13 +22,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 ##  	tyler.spencer
 ## Created:
 ##  	29-June-2016
+## Usage:
+##	python request_data.py
 
 
 import sys, requests, json, socket, csv, argparse
 from collections import defaultdict
 
 #thoughtspot_host = 'https://' + socket.gethostname()
-thoughtspot_host = ''
+thoughtspot_host = 'https://' + ''
 username = ''
 password = ''
 pinboardId = ''
