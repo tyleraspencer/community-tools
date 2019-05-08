@@ -1,27 +1,13 @@
 #!/usr/bin/env python
 
-"""
-Copyright 2017 ThoughtSpot
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
-files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
-Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS 
-BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT 
-OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
 ## Purpose: 
 ##  	determine ownership and permissions for all system objects
 ## Authors:
 ##  	tyler.spencer@thoughtspot.com
 ## Created:
 ##  	16-June-2017
+## Usage:
+##	python get_permissions.py -t https://<ip_or_domain> -u <username> -p <password>
 
 import sys, requests, json, socket, csv, argparse, re
 from collections import defaultdict
@@ -33,6 +19,8 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 #session cookies
 session = requests.session()
+session.verify = False
+session.headers = {"X-Requested-By": "ThoughtSpot"}
 
 def parse_args():
     """Parses the arguments from the command line."""
@@ -59,11 +47,10 @@ def main():
 		groups = get_ug("USER_GROUP")
 		users_in_groups = get_users_in_groups()
 
-		answer="QUESTION_ANSWER_SHEET" ## SHEET will eventually be depricated and I will have to switch to BOOK
-		pinboard="PINBOARD_ANSWER_SHEET"
+		answer="QUESTION_ANSWER_BOOK"
+		pinboard="PINBOARD_ANSWER_BOOK"
 		data="LOGICAL_TABLE"
 	
-
 		if args.share:
 			permissionsList = [["Object ID", "Object Type", "User ID", "Permission Type"]]
 		else:
@@ -121,7 +108,7 @@ def is_ascii(string):
 #output: [{guid:name},{guid:name} ...].  ugType should be USER or USER_GROUP
 def get_ug(ugType):
 	URL = args.thoughtspot_host + '/callosum/v1/metadata/list?type=' + ugType
-	
+
 	response = session.get(URL)
 	data = json.loads(response.text)
 
@@ -146,11 +133,11 @@ def get_permissions(objType, metadata):
 		GUIDs.append(str(GUID["id"]))
 
 	permissionURL = args.thoughtspot_host + '/callosum/v1/security/definedpermission'
-	
+
 	permissionParameters = {"type": objType, "id": str(GUIDs), "dependentshare": True}
 	permissionResponse = session.post(permissionURL, data=permissionParameters)
 	permissions = json.loads(permissionResponse.text)
-	
+
 	return permissions
 
 
@@ -169,9 +156,10 @@ def get_users_in_groups():
 
 
 def process_permissions(users, groups, users_in_groups, permissionsList, raw_objType, objMetadata, objPermissions):
-	if raw_objType == "QUESTION_ANSWER_SHEET":
+	objType = "UNKNOWN"
+	if raw_objType == "QUESTION_ANSWER_BOOK":
 		objType = "answer"
-	elif raw_objType == "PINBOARD_ANSWER_SHEET":
+	elif raw_objType == "PINBOARD_ANSWER_BOOK":
 		objType = "pinboard"
 
 	for obj in objMetadata["headers"]:
@@ -188,24 +176,23 @@ def process_permissions(users, groups, users_in_groups, permissionsList, raw_obj
 				objType = "unknown data object"
 		objGUID = obj["id"]
 		objectPermissions = objPermissions[objGUID]["permissions"]
-		
+
 		## all share users
 		for ugGUID in objectPermissions:
 			if args.share:
-				permissionsList.append([is_ascii(obj["id"]), is_ascii(raw_objType), ugGUID, is_ascii(objectPermissions[ugGUID]["shareMode"])])
+				permissionsList.append(['"' + is_ascii(obj["id"]) + '"', '"' + is_ascii(raw_objType) + '"', '"' + ugGUID + '"', '"' + is_ascii(objectPermissions[ugGUID]["shareMode"]) + '"'])
 			else:
 				if ugGUID in groups: # this GUID is a group
 					for user in users_in_groups[str(groups[ugGUID])]:
-						permissionsList.append([is_ascii(obj["name"]), is_ascii(obj["authorName"]), objType, is_ascii(user), is_ascii(objectPermissions[ugGUID]["shareMode"]), is_ascii(groups[ugGUID])])
+						permissionsList.append(['"' + is_ascii(obj["name"]) + '"', '"' + is_ascii(obj["authorName"]) + '"', '"' + objType + '"', '"' + is_ascii(user) + '"', '"' + is_ascii(objectPermissions[ugGUID]["shareMode"]) + '"', '"' + is_ascii(groups[ugGUID]) + '"'])
 				else: # this GUID is a user
-					permissionsList.append([is_ascii(obj["name"]), is_ascii(obj["authorName"]), objType, is_ascii(users[ugGUID]), is_ascii(objectPermissions[ugGUID]["shareMode"]), "N/A"])
-		
+					permissionsList.append([ '"' + is_ascii(obj["name"]) + '"', '"' + is_ascii(obj["authorName"]) + '"', '"' + objType + '"', '"' + is_ascii(users[ugGUID]) + '"', '"' + is_ascii(objectPermissions[ugGUID]["shareMode"]) + '"', '"N/A"'])
+
 		## all owners
 		if args.share:
-			permissionsList.append([is_ascii(obj["id"]), is_ascii(raw_objType), obj["author"], "MODIFY"])
+			permissionsList.append(['"' + is_ascii(obj["id"]) + '"', '"' + is_ascii(raw_objType) + '"', '"' + obj["author"] + '"', '"MODIFY"'])
 		else:
-			permissionsList.append([is_ascii(obj["name"]), is_ascii(obj["authorName"]), objType, is_ascii(obj["authorName"]), "MODIFY", "N/A"])
-
+			permissionsList.append([ '"' + is_ascii(obj["name"]) + '"', '"' + is_ascii(obj["authorName"]) + '"', '"' + objType + '"', '"' + is_ascii(obj["authorName"]) + '"', '"MODIFY"', '"N/A"'])
 
 	return permissionsList
 
