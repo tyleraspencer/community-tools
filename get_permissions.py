@@ -83,7 +83,7 @@ def main():
 				csv_writer.writerows(permissionsList)
 		else:
 			for row in permissionsList:
-				print args.delimiter.join(row)
+				print(args.delimiter.join(row))
 
 
 
@@ -92,7 +92,7 @@ def login():
 	credentials = {"username": args.username, "password": args.password, "rememberme": True}
 	login = session.post(args.thoughtspot_host + '/callosum/v1/session/login', data=credentials, verify=False)
 	if login.status_code != 200:
-		print "Server connection failed. Status code: " + str(login.status_code)
+		print("Server connection failed. Status code: " + str(login.status_code))
 		return False
 	else:
 		return True
